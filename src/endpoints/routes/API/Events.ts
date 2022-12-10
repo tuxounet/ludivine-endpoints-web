@@ -13,11 +13,25 @@ export interface APIEventsClient {
 export class APIEvents extends HttpSSERoute {
   constructor(parent: HttpRouter) {
     super("api/events", parent);
+
+    setInterval(() => {
+      this.emit({ myfact: "ok" });
+    }, 5000);
   }
   method = "GET";
   path = /^\/api\/events$/gi;
   clients: APIEventsClient[] = [];
-  facts: APIEventsEvent[] = [];
+  facts: APIEventsEvent[] = [
+    {
+      fact: "1",
+    },
+    {
+      fact: "2",
+    },
+    {
+      fact: "3",
+    },
+  ];
 
   handler(
     request: http.IncomingMessage,
@@ -52,7 +66,7 @@ export class APIEvents extends HttpSSERoute {
   emit(newFact: APIEventsEvent) {
     this.facts.push(newFact);
     this.clients.forEach((client) =>
-      client.response.write(`data: ${JSON.stringify(newFact)}\n\n`)
+      client.response.write(`data: [${JSON.stringify(newFact)}]\n\n`)
     );
   }
 }
