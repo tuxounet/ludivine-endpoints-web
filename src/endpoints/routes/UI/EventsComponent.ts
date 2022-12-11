@@ -11,13 +11,12 @@ events.onmessage = (event) => {
     const li = document.createElement("li");
     li.innerText = JSON.stringify(fact);
     eventsList.appendChild(li)
-    facts.push(fact) 
+    facts.push(fact)     
   }
-  
 };
 </script>
 <div> 
-  <h1>Events Zone</h1>
+  <h1>Events</h1>
   <ul id="events">
   </ul>
 </div>`;

@@ -13,25 +13,11 @@ export interface APIEventsClient {
 export class APIEvents extends HttpSSERoute {
   constructor(parent: HttpRouter) {
     super("api/events", parent);
-
-    setInterval(() => {
-      this.emit({ myfact: "ok" });
-    }, 5000);
   }
   method = "GET";
   path = /^\/api\/events$/gi;
   clients: APIEventsClient[] = [];
-  facts: APIEventsEvent[] = [
-    {
-      fact: "1",
-    },
-    {
-      fact: "2",
-    },
-    {
-      fact: "3",
-    },
-  ];
+  facts: APIEventsEvent[] = [];
 
   handler(
     request: http.IncomingMessage,
@@ -58,15 +44,18 @@ export class APIEvents extends HttpSSERoute {
     this.clients.push(newClient);
 
     request.on("close", () => {
-      console.log(`${clientId} Connection closed`);
       this.clients = this.clients.filter((client) => client.id !== clientId);
     });
   }
 
   emit(newFact: APIEventsEvent) {
-    this.facts.push(newFact);
+    const finalFact: APIEventsEvent = {
+      ...newFact,
+      date: Date.now().toString(),
+    };
+    this.facts.push(finalFact);
     this.clients.forEach((client) =>
-      client.response.write(`data: [${JSON.stringify(newFact)}]\n\n`)
+      client.response.write(`data: [${JSON.stringify(finalFact)}]\n\n`)
     );
   }
 }

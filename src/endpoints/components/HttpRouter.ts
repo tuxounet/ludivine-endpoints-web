@@ -3,13 +3,14 @@ import { IncomingMessage } from "http";
 import { WebEndpoint } from "../WebEndpoint";
 import http from "http";
 import { HttpRestRoute } from "../types/HttpRestRoute";
-import { UIRoot } from "../routes/UI/Root";
+import { UIRootPage } from "../routes/UI/RootPage";
 import { HttpRequest } from "../types/HttpRequest";
 import { HttpResponse } from "../types/HttpResponse";
 import { APIHealth } from "../routes/API/Health";
 import { HttpSSERoute } from "../types/HttpSSERoute";
 import { APIEvents } from "../routes/API/Events";
 import { HttpRoute } from "../types/HttpRoute";
+import { APIInput } from "../routes/API/Input";
 
 export class HttpRouter extends bases.KernelElement {
   constructor(endpoint: WebEndpoint) {
@@ -20,12 +21,13 @@ export class HttpRouter extends bases.KernelElement {
   routes: HttpRoute[];
 
   async registerUIRoute() {
-    this.routes.push(new UIRoot(this));
+    this.routes.push(new UIRootPage(this));
   }
 
   async registerApiRoute() {
     this.routes.push(new APIHealth(this));
     this.routes.push(new APIEvents(this));
+    this.routes.push(new APIInput(this));
   }
 
   async listen() {
@@ -54,14 +56,15 @@ export class HttpRouter extends bases.KernelElement {
     try {
       const httpRequest = new HttpRequest(request);
 
-      const route = this.routes.find(
-        (route) =>
-          route.method === httpRequest.method &&
-          route.path.test(httpRequest.url)
-      );
-      if (!route) {
+      const routes = this.routes
+        .filter((route) => route.method === httpRequest.method)
+        .filter((route) => httpRequest.url.match(route.path));
+
+      if (routes.length === 0) {
         return this.answer(response, HttpResponse.notfound());
       }
+      const route = routes[0];
+
       if (route instanceof HttpRestRoute) {
         const httpResponse = await route.handler(httpRequest);
         return this.answer(response, httpResponse);

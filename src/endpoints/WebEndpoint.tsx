@@ -12,14 +12,16 @@ export class WebEndpoint
   router: HttpRouter;
 
   @logging.logMethod()
-  async renderUI(): Promise<void> {
+  async open(): Promise<void> {
+    await this.router.initialize();
     await this.router.registerUIRoute();
+    await this.router.registerApiRoute();
     await this.router.listen();
     await this.kernel.waitForShutdown(this.fullName);
   }
 
   @logging.logMethod()
-  async listenAPI(): Promise<void> {
-    await this.router.registerApiRoute();
+  async close(): Promise<void> {
+    await this.router.shutdown();
   }
 }

@@ -32,7 +32,7 @@
     "url": "https://github.com/tuxounet/ludivine-endpoints-web/issues"
   },
   "dependencies": {
-    "@ludivine/runtime": "^0.0.10"
+    "@ludivine/runtime": "^0.0.11"
   },
   "homepage": "https://github.com/tuxounet/ludivine-endpoints-web#readme",
   "devDependencies": {
