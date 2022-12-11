@@ -1,3 +1,4 @@
+import { messaging } from "@ludivine/runtime";
 import http from "http";
 import { HttpRouter } from "../../components/HttpRouter";
 
@@ -18,7 +19,7 @@ export class APIEvents extends HttpSSERoute {
   method = "GET";
   path = /^\/api\/events$/gi;
   clients: APIEventsClient[] = [];
-  facts: APIEventsEvent[] = [];
+  facts: messaging.IMessageEvent[] = [];
 
   handler(
     request: http.IncomingMessage,
@@ -49,8 +50,8 @@ export class APIEvents extends HttpSSERoute {
     });
   }
 
-  emit(newFact: APIEventsEvent): void {
-    const finalFact: APIEventsEvent = {
+  emit(newFact: messaging.IMessageEvent): void {
+    const finalFact: messaging.IMessageEvent = {
       ...newFact,
       date: Date.now().toString(),
     };

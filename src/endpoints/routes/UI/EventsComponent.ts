@@ -16,7 +16,7 @@ events.onmessage = (event) => {
 };
 </script>
 <div> 
-  <h1>Events</h1>
+  <h1>Evenements:</h1>
   <ul id="events">
   </ul>
 </div>`;

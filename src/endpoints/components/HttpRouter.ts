@@ -1,4 +1,4 @@
-import { bases, config, logging } from "@ludivine/runtime";
+import { bases, config, logging, messaging } from "@ludivine/runtime";
 import http, { IncomingMessage } from "http";
 import { WebEndpoint } from "../WebEndpoint";
 import { HttpRestRoute } from "../types/HttpRestRoute";
@@ -18,6 +18,20 @@ export class HttpRouter extends bases.KernelElement {
   }
 
   routes: HttpRoute[];
+
+  @logging.logMethod()
+  async initialize(): Promise<void> {
+    const messages =
+      this.kernel.container.get<messaging.IMessagingBroker>("messaging");
+    await messages.subscribeTopic("/conversation/0", this);
+  }
+
+  @logging.logMethod()
+  async shutdown(): Promise<void> {
+    const messages =
+      this.kernel.container.get<messaging.IMessagingBroker>("messaging");
+    await messages.unsubscribeTopic("/conversation/0", this.fullName);
+  }
 
   @logging.logMethod()
   async registerUIRoute(): Promise<void> {
@@ -82,6 +96,14 @@ export class HttpRouter extends bases.KernelElement {
     } catch (e) {
       this.log.error(e);
       return this.answer(response, HttpResponse.failure(e));
+    }
+  }
+
+  @logging.logMethod()
+  async onMessage(message: messaging.IMessageEvent): Promise<void> {
+    const route = this.routes.find((item) => item instanceof APIEvents);
+    if (route != null) {
+      (route as APIEvents).emit(message);
     }
   }
 
