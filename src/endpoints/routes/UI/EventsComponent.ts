@@ -1,4 +1,4 @@
-export const EventsComponent = () => {
+export const EventsComponent = (): string => {
   return `
 <script>
 const events = new EventSource('/api/events');

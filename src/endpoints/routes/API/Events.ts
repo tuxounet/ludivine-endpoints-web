@@ -14,6 +14,7 @@ export class APIEvents extends HttpSSERoute {
   constructor(parent: HttpRouter) {
     super("api/events", parent);
   }
+
   method = "GET";
   path = /^\/api\/events$/gi;
   clients: APIEventsClient[] = [];
@@ -48,7 +49,7 @@ export class APIEvents extends HttpSSERoute {
     });
   }
 
-  emit(newFact: APIEventsEvent) {
+  emit(newFact: APIEventsEvent): void {
     const finalFact: APIEventsEvent = {
       ...newFact,
       date: Date.now().toString(),

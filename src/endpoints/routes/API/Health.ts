@@ -7,6 +7,7 @@ export class APIHealth extends HttpRestRoute {
   constructor(parent: HttpRouter) {
     super("api/health", parent);
   }
+
   method = "GET";
   path = /^\/api\/health$/gi;
   async handler(request: HttpRequest): Promise<HttpResponse> {

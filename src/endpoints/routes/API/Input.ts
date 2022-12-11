@@ -8,6 +8,7 @@ export class APIInput extends HttpRestRoute {
   constructor(readonly router: HttpRouter) {
     super("api/input", router);
   }
+
   method = "POST";
   path = /^\/api\/input$/gi;
   async handler(request: HttpRequest): Promise<HttpResponse> {
@@ -16,7 +17,7 @@ export class APIInput extends HttpRestRoute {
     const eventRoute = this.router.routes.find(
       (item) => item instanceof APIEvents
     );
-    if (eventRoute) {
+    if (eventRoute != null) {
       const events = eventRoute as APIEvents;
       events.emit({ input: body.query });
     }

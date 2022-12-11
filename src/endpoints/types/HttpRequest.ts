@@ -6,20 +6,20 @@ export class HttpRequest {
   body?: string;
 
   constructor(readonly incoming: IncomingMessage) {
-    this.url = incoming.url ? incoming.url.trim() : "/";
-    this.method = incoming.method
-      ? incoming.method.trim().toUpperCase()
-      : "NONE";
+    this.url = incoming.url !== undefined ? incoming.url.trim() : "/";
+    this.method =
+      incoming.method !== undefined
+        ? incoming.method.trim().toUpperCase()
+        : "NONE";
   }
 
-  async readTextBody() {
+  async readTextBody(): Promise<string> {
     return await new Promise<string>((resolve, reject) => {
       let body = "";
-      this.incoming.on("data", (chunk) => {
+      this.incoming.on("data", (chunk: string) => {
         body += chunk.toString(); // convert Buffer to string
       });
       this.incoming.on("end", () => {
-        console.log(body);
         resolve(body);
       });
       this.incoming.on("error", (e) => {
@@ -28,10 +28,10 @@ export class HttpRequest {
     });
   }
 
-  async readJsonBody<T = unknown>() {
+  async readJsonBody<T = unknown>(): Promise<T> {
     return await new Promise<T>((resolve, reject) => {
       let body = "";
-      this.incoming.on("data", (chunk) => {
+      this.incoming.on("data", (chunk: string) => {
         body += chunk.toString(); // convert Buffer to string
       });
       this.incoming.on("end", () => {

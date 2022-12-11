@@ -8,6 +8,7 @@ export class UIRootPage extends HttpRestRoute {
   constructor(parent: HttpRouter) {
     super("ui/root", parent);
   }
+
   method = "GET";
   path = /^\/$/gi;
 

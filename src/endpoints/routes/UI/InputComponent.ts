@@ -1,4 +1,4 @@
-export const InputComponent = () => {
+export const InputComponent = (): string => {
   return `<script>
     function onSubmitInput(ev)
     {
