@@ -1,3 +1,4 @@
+import { messaging } from "@ludivine/runtime";
 import { HttpRouter } from "../../components/HttpRouter";
 import { HttpRequest } from "../../types/HttpRequest";
 import { HttpResponse } from "../../types/HttpResponse";
@@ -14,13 +15,13 @@ export class APIInput extends HttpRestRoute {
   async handler(request: HttpRequest): Promise<HttpResponse> {
     const body = await request.readJsonBody<{ query: string }>();
 
-    const eventRoute = this.router.routes.find(
-      (item) => item instanceof APIEvents
-    );
-    if (eventRoute != null) {
-      const events = eventRoute as APIEvents;
-      events.emit({ input: body.query });
-    }
+    const messages =
+      this.kernel.container.get<messaging.IMessagingBroker>("messaging");
+    await messages.publish("/conversation/0", {
+      input: body.query,
+      date: Date.now().toString(),
+    });
+
     return HttpResponse.okJson({ status: "OK" });
   }
 }

@@ -20,8 +20,8 @@ export class UIRootPage extends HttpRestRoute {
 <head><title>Ludivine</title> 
 </head>
 <body>
-${InputComponent()}
 ${EventsComponent()}
+${InputComponent()}
 </body>
 </html>`,
     };

@@ -16,7 +16,7 @@ export const InputComponent = (): string => {
     }
   </script>
   <div> 
-    <h1>Input</h1>    
+    <h1>0 &gt;</h1>    
     <input type="text" id="query"  />
     <button onclick="onSubmitInput()">Envoyer</button>    
   </div>`;
