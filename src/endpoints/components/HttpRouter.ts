@@ -102,10 +102,11 @@ export class HttpRouter extends bases.KernelElement {
   @logging.logMethod()
   async onMessage(message: messaging.IMessageEvent): Promise<void> {
     const route = this.routes.find((item) => item instanceof APIEvents);
-    if (route) {
+    if (route != null) {
       (route as APIEvents).emit(message);
     }
   }
+
   private answer(
     response: http.ServerResponse,
     httpResponse: HttpResponse

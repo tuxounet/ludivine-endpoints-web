@@ -3,7 +3,6 @@ import { HttpRouter } from "../../components/HttpRouter";
 import { HttpRequest } from "../../types/HttpRequest";
 import { HttpResponse } from "../../types/HttpResponse";
 import { HttpRestRoute } from "../../types/HttpRestRoute";
-import { APIEvents } from "./Events";
 
 export class APIInput extends HttpRestRoute {
   constructor(readonly router: HttpRouter) {
